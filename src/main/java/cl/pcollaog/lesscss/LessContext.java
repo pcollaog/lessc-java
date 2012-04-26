@@ -1,7 +1,10 @@
 package cl.pcollaog.lesscss;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -16,14 +19,23 @@ import java.util.Map;
  */
 public class LessContext {
 
-	private Map<String, String> _lessVariables = new HashMap<String, String>();
+	private static Logger logger = LoggerFactory.getLogger(LessContext.class);
+
+	private Map<String, String> _variables = new LinkedHashMap<String, String>();
 
 	/**
-	 * @param name
-	 * @param value
+	 * @return the variables
 	 */
-	public void addVariable(String name, String value) {
-		_lessVariables.put(name, value);
+	public final Map<String, String> getVariables() {
+		return _variables;
+	}
+
+	/**
+	 * @param variables
+	 *            the variables to set
+	 */
+	public final void setVariables(Map<String, String> variables) {
+		_variables = variables;
 	}
 
 }
