@@ -94,17 +94,45 @@ public class VariableLess extends AbstractElementLess {
 			Matcher matcher = VARIABLE_MATCHER.matcher(value);
 
 			if (matcher.matches()) {
-
 				String toReplace = matcher.group(1);
 				String valueToReplace = replaceVariable(toReplace);
+				String replacedValue = StringUtils.replace(value, toReplace,
+						valueToReplace);
 
-				return StringUtils.replace(value, toReplace, valueToReplace);
+				replacedValue = operationsProcess(replacedValue);
+
+				return replacedValue;
 			} else {
 				return value;
 			}
 		}
 
 		return value;
+	}
+
+	private static Pattern HEX_CSS_PATTER = Pattern
+			.compile("(#[\\dA-F]{6}|#[\\dA-F]{3})+\\s*(\\+|\\-)?\\s*");
+
+	/**
+	 * @param replacedValue
+	 * @return
+	 */
+	private String operationsProcess(String replacedValue) {
+
+		Matcher matcher = HEX_CSS_PATTER.matcher(replacedValue);
+
+		while (matcher.find()) {
+
+			String value = matcher.group(1);
+			String operator = matcher.group(2);
+
+			if (null != operator) {
+				
+			}
+
+		}
+
+		return null;
 	}
 
 	@Override
