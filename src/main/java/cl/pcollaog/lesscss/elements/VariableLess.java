@@ -94,7 +94,11 @@ public class VariableLess extends AbstractElementLess {
 			Matcher matcher = VARIABLE_MATCHER.matcher(value);
 
 			if (matcher.matches()) {
-				return replaceVariable(matcher.group(1));
+
+				String toReplace = matcher.group(1);
+				String valueToReplace = replaceVariable(toReplace);
+
+				return StringUtils.replace(value, toReplace, valueToReplace);
 			} else {
 				return value;
 			}
