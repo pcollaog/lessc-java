@@ -111,7 +111,7 @@ public class VariableLess extends AbstractElementLess {
 	}
 
 	private static Pattern HEX_CSS_PATTER = Pattern
-			.compile("(#[\\dA-F]{6}|#[\\dA-F]{3})+\\s*(\\+|\\-)?\\s*");
+			.compile("(#[\\da-fA-F]{6}|#[\\da-fA-F]{3})\\s*((\\+|\\-)?\\s*(#[\\da-fA-F]{6}|#[\\da-fA-F]{3}))?");
 
 	/**
 	 * @param replacedValue
@@ -123,15 +123,28 @@ public class VariableLess extends AbstractElementLess {
 
 		while (matcher.find()) {
 
-			String value = matcher.group(1);
-			String operator = matcher.group(2);
+			String firstValue = matcher.group(1);
+			String operator = matcher.group(3);
+			String secondValue = matcher.group(4);
 
-			if (null != operator) {
-				
+			if (StringUtils.isEmpty(operator)
+					&& StringUtils.isEmpty(secondValue)) {
+				return firstValue;
+			} else {
+				int a = Integer.parseInt(
+						StringUtils.substringAfter(firstValue, "#"), 16);
+
+				int b = Integer.parseInt(
+						StringUtils.substringAfter(secondValue, "#"), 16);
+
 			}
 
 		}
 
+		return null;
+	}
+
+	private String normalizeHexValue(String cssHexValue) {
 		return null;
 	}
 
