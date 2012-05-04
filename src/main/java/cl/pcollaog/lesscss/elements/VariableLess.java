@@ -75,6 +75,8 @@ public class VariableLess extends AbstractElementLess {
 			String variable = matcher.group();
 			String result = replaceVariable(variable);
 
+			lessText = StringUtils.replace(lessText, variable, result);
+
 			logger.debug("Variable to replace: [" + variable + "] value ["
 					+ result + "]");
 		}
@@ -131,12 +133,17 @@ public class VariableLess extends AbstractElementLess {
 					&& StringUtils.isEmpty(secondValue)) {
 				return firstValue;
 			} else {
-				int a = Integer.parseInt(
-						StringUtils.substringAfter(firstValue, "#"), 16);
+				int a = normalizeHexValue(firstValue);
+				int b = normalizeHexValue(secondValue);
 
-				int b = Integer.parseInt(
-						StringUtils.substringAfter(secondValue, "#"), 16);
+				int c = 0;
+				if ("+".equals(operator)) {
+					c = a + b;
+				} else {
+					c = a - b;
+				}
 
+				return integerToCssColor(c);
 			}
 
 		}
@@ -144,8 +151,32 @@ public class VariableLess extends AbstractElementLess {
 		return null;
 	}
 
-	private String normalizeHexValue(String cssHexValue) {
-		return null;
+	/**
+	 * 
+	 * @param cssHexValue
+	 * @return int value base hex
+	 */
+	private int normalizeHexValue(String cssHexValue) {
+		String cleanCssHexValue = StringUtils.substringAfter(cssHexValue, "#");
+		StringBuffer sb = new StringBuffer();
+
+		if (3 == cleanCssHexValue.length()) {
+			for (int i = 0; i < cleanCssHexValue.length(); i++) {
+				sb.append(cleanCssHexValue.charAt(i));
+				sb.append(cleanCssHexValue.charAt(i));
+			}
+		} else if (6 == cleanCssHexValue.length()) {
+			sb.append(cleanCssHexValue);
+		} else {
+			// TODO:mejorar manejo de excepciones
+			throw new IllegalArgumentException(
+					"Wrong value for CSS or HEX color");
+		}
+		return Integer.parseInt(sb.toString(), 16);
+	}
+
+	private String integerToCssColor(int intValue) {
+		return "#".concat(Integer.toHexString(intValue));
 	}
 
 	@Override

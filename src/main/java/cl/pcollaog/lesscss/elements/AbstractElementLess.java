@@ -32,7 +32,7 @@ public abstract class AbstractElementLess {
 		String result = preProcess(lessText);
 		result = processInternal(result);
 		result = postProcess(result);
-		return result;
+		return result.trim();
 	}
 
 	/**
