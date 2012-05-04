@@ -24,6 +24,19 @@ import cl.pcollaog.lesscss.LessContext;
  */
 public class VariableLess extends AbstractElementLess {
 
+	/**
+	 * busca los candidatos a evaluar variables
+	 * 
+	 * <pre>
+	 * content: @@variable;
+	 * </pre>
+	 */
+	private static final Pattern EVALUATE_VARIABLE_PATTERN = Pattern
+			.compile("@(@([\\d\\w-_]+))");
+
+	/**
+	 * Busca las variables
+	 */
 	private static final Pattern VARIABLE_MATCHER = Pattern
 			.compile(".*(@[\\d\\w-_]*).*");
 
@@ -33,7 +46,7 @@ public class VariableLess extends AbstractElementLess {
 			"^(@[\\d\\w-_]*)\\s*:(.*);$", Pattern.MULTILINE);
 
 	private static final Pattern VARIABLE_REPLACE_PATTERN = Pattern
-			.compile("@[\\d\\w-_]*");
+			.compile("@[\\d\\w-_]+");
 
 	/**
 	 * @param lessContext
@@ -69,8 +82,11 @@ public class VariableLess extends AbstractElementLess {
 
 	@Override
 	protected String processInternal(String lessText) {
-		Matcher matcher = VARIABLE_REPLACE_PATTERN.matcher(lessText);
 
+		Matcher evaluateVariableMatcher = EVALUATE_VARIABLE_PATTERN
+				.matcher(lessText);
+
+		Matcher matcher = VARIABLE_REPLACE_PATTERN.matcher(lessText);
 		while (matcher.find()) {
 			String variable = matcher.group();
 			String result = replaceVariable(variable);
@@ -133,6 +149,7 @@ public class VariableLess extends AbstractElementLess {
 					&& StringUtils.isEmpty(secondValue)) {
 				return firstValue;
 			} else {
+				// TODO: refatorize this
 				int a = normalizeHexValue(firstValue);
 				int b = normalizeHexValue(secondValue);
 

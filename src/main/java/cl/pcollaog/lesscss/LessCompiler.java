@@ -32,8 +32,13 @@ public class LessCompiler {
 	 */
 	public String compile(final String lessText) {
 		LessContext lessContext = new LessContext();
-		AbstractElementLess elementLess = new VariableLess(lessContext);
-		String result = elementLess.process(lessText);
+
+		AbstractElementLess less = new VariableLess(lessContext);
+		String result = less.process(lessText);
+
+		less = new EvaluateVariableLess(lessContext);
+		result = less.process(result);
+
 		return result;
 	}
 
