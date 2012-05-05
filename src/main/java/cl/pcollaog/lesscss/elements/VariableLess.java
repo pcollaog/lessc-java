@@ -24,6 +24,8 @@ import cl.pcollaog.lesscss.LessContext;
  */
 public class VariableLess extends AbstractElementLess {
 
+	private static Logger logger = LoggerFactory.getLogger(VariableLess.class);
+
 	/**
 	 * busca los candidatos a evaluar variables
 	 * 
@@ -40,13 +42,14 @@ public class VariableLess extends AbstractElementLess {
 	private static final Pattern VARIABLE_MATCHER = Pattern
 			.compile(".*(@[\\d\\w-_]*).*");
 
-	private static Logger logger = LoggerFactory.getLogger(VariableLess.class);
-
 	private static final Pattern VARIABLE_NAME_VALUE_PATTERN = Pattern.compile(
-			"^(@[\\d\\w-_]*)\\s*:(.*);$", Pattern.MULTILINE);
+			"^(@[\\d\\w-_]*)\\s*:\\s*(.*);$", Pattern.MULTILINE);
 
 	private static final Pattern VARIABLE_REPLACE_PATTERN = Pattern
 			.compile("@[\\d\\w-_]+");
+
+	private static Pattern HEX_CSS_PATTER = Pattern
+			.compile("(#[\\da-fA-F]{6}|#[\\da-fA-F]{3})\\s*((\\+|\\-)?\\s*(#[\\da-fA-F]{6}|#[\\da-fA-F]{3}))?");
 
 	/**
 	 * @param lessContext
@@ -68,7 +71,7 @@ public class VariableLess extends AbstractElementLess {
 
 			lessVariables.put(name, value);
 
-			lessText = StringUtils.remove(lessText, raw);
+			lessText = StringUtils.remove(lessText, raw).trim();
 
 			if (logger.isDebugEnabled()) {
 				logger.debug("Raw: [" + raw + "]");
@@ -86,6 +89,23 @@ public class VariableLess extends AbstractElementLess {
 		Matcher evaluateVariableMatcher = EVALUATE_VARIABLE_PATTERN
 				.matcher(lessText);
 
+		while (evaluateVariableMatcher.find()) {
+			String variable = evaluateVariableMatcher.group();
+			String variableName = StringUtils.substringAfter(variable, "@");
+
+			if (getLessContext().containsVariable(variableName)) {
+				String value = getLessContext().getVariable(variableName);
+				value = StringUtils.remove(value, "'").trim();
+				String result = getLessContext().getVariable("@".concat(value));
+
+				lessText = StringUtils.replace(lessText, variable, result);
+
+				logger.debug("Variable to evaluate: [{}] value [{}]",
+						variableName, result);
+			}
+
+		}
+
 		Matcher matcher = VARIABLE_REPLACE_PATTERN.matcher(lessText);
 		while (matcher.find()) {
 			String variable = matcher.group();
@@ -93,8 +113,8 @@ public class VariableLess extends AbstractElementLess {
 
 			lessText = StringUtils.replace(lessText, variable, result);
 
-			logger.debug("Variable to replace: [" + variable + "] value ["
-					+ result + "]");
+			logger.debug("Variable to replace: [{}] value [{}]", variable,
+					result);
 		}
 
 		return lessText;
@@ -106,8 +126,8 @@ public class VariableLess extends AbstractElementLess {
 	private String replaceVariable(String variable) {
 
 		String value = null;
-		if (getLessContext().getVariables().containsKey(variable)) {
-			value = getLessContext().getVariables().get(variable);
+		if (getLessContext().containsVariable(variable)) {
+			value = getLessContext().getVariable(variable);
 
 			Matcher matcher = VARIABLE_MATCHER.matcher(value);
 
@@ -127,9 +147,6 @@ public class VariableLess extends AbstractElementLess {
 
 		return value;
 	}
-
-	private static Pattern HEX_CSS_PATTER = Pattern
-			.compile("(#[\\da-fA-F]{6}|#[\\da-fA-F]{3})\\s*((\\+|\\-)?\\s*(#[\\da-fA-F]{6}|#[\\da-fA-F]{3}))?");
 
 	/**
 	 * @param replacedValue
@@ -194,11 +211,6 @@ public class VariableLess extends AbstractElementLess {
 
 	private String integerToCssColor(int intValue) {
 		return "#".concat(Integer.toHexString(intValue));
-	}
-
-	@Override
-	protected String postProcess(String result) {
-		return super.postProcess(result);
 	}
 
 }

@@ -24,18 +24,28 @@ public class LessContext {
 	private Map<String, String> _variables = new LinkedHashMap<String, String>();
 
 	/**
-	 * @return the variables
-	 */
-	public final Map<String, String> getVariables() {
-		return _variables;
-	}
-
-	/**
 	 * @param variables
 	 *            the variables to set
 	 */
 	public final void setVariables(Map<String, String> variables) {
 		_variables = variables;
+	}
+
+	/**
+	 * 
+	 * @param variableName
+	 * @return
+	 */
+	public String getVariable(String variableName) {
+		return _variables.get(variableName);
+	}
+
+	/**
+	 * @param variableName
+	 * @return
+	 */
+	public boolean containsVariable(String variableName) {
+		return _variables.containsKey(variableName);
 	}
 
 }

@@ -1,5 +1,6 @@
 package cl.pcollaog.lesscss;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,8 @@ public class LessCompiler {
 
 	private static Logger logger = LoggerFactory.getLogger(LessCompiler.class);
 
+	private boolean _pretty = true;
+
 	/**
 	 * 
 	 */
@@ -38,6 +41,12 @@ public class LessCompiler {
 
 		less = new EvaluateVariableLess(lessContext);
 		result = less.process(result);
+
+		if (_pretty) {
+			result = StringUtils.replace(result.trim(), ";", ";\n");
+		}
+
+		logger.debug("Result CssLess \n{}", result);
 
 		return result;
 	}

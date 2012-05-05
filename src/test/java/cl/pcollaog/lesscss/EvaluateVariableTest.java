@@ -34,7 +34,7 @@ public class EvaluateVariableTest {
 		LessCompiler lessCompiler = new LessCompiler();
 		String out = lessCompiler.compile(lessText);
 
-		String expected = "content: \"I am fnord.\";";
+		String expected = "content: \"I am fnord.\";\n";
 
 		Assert.assertEquals(expected, out);
 	}
