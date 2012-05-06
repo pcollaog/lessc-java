@@ -27,7 +27,7 @@ public class VariableTest {
 		LessCompiler lessCompiler = new LessCompiler();
 		String out = lessCompiler.compile(lessText);
 
-		String expected = "#header { color: #6c94be; }";
+		String expected = "#header { color: #6c94be; }\n";
 
 		Assert.assertEquals(expected, out);
 	}

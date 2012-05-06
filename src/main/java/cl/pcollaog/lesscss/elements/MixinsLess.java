@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,11 +37,7 @@ public class MixinsLess extends AbstractElementLess {
 	}
 
 	@Override
-	protected String processInternal(String lessText) {
-
-		// content = content.replaceAll("(?s)/\\*.*?\\*/", ""); //This is to
-		// remove the comments from the CSS
-
+	protected String preProcess(String lessText) {
 		Matcher matcher = CSS_BLOCK_PATTERN.matcher(lessText);
 
 		Map<String, String> definitions = new LinkedHashMap<String, String>();
@@ -52,11 +49,20 @@ public class MixinsLess extends AbstractElementLess {
 			logger.debug("selector: [{}]", selector);
 			logger.debug("definition: [{}]", definition);
 
+			definition = StringUtils.replace(definition, "\n", " ");
+			definition = StringUtils.substringBetween(definition, "{", "}")
+					.trim();
+
 			definitions.put(selector, definition);
 		}
 
 		getLessContext().setDefinitions(definitions);
 
-		return null;
+		return super.preProcess(lessText);
+	}
+
+	@Override
+	protected String processInternal(String lessText) {
+		return lessText;
 	}
 }
