@@ -40,13 +40,13 @@ public class VariableLess extends AbstractElementLess {
 	 * Busca las variables
 	 */
 	private static final Pattern VARIABLE_MATCHER = Pattern
-			.compile(".*(@[\\d\\w-_]*).*");
+			.compile(".*(@[\\w-]*).*");
 
 	private static final Pattern VARIABLE_NAME_VALUE_PATTERN = Pattern.compile(
-			"^(@[\\d\\w-_]*)\\s*:\\s*(.*);$", Pattern.MULTILINE);
+			"^(@[\\w-]*)\\s*:\\s*(.*);$", Pattern.MULTILINE);
 
 	private static final Pattern VARIABLE_REPLACE_PATTERN = Pattern
-			.compile("@[\\d\\w-_]+");
+			.compile("@[\\w-]+");
 
 	private static Pattern HEX_CSS_PATTER = Pattern
 			.compile("(#[\\da-fA-F]{6}|#[\\da-fA-F]{3})\\s*((\\+|\\-)?\\s*(#[\\da-fA-F]{6}|#[\\da-fA-F]{3}))?");

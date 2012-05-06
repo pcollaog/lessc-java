@@ -23,12 +23,23 @@ public class LessContext {
 
 	private Map<String, String> _variables = new LinkedHashMap<String, String>();
 
+	private Map<String, String> _definitions = new LinkedHashMap<String, String>();
+
 	/**
 	 * @param variables
 	 *            the variables to set
 	 */
 	public final void setVariables(Map<String, String> variables) {
 		_variables = variables;
+		logger.debug("Adding Variables [{}]", variables);
+	}
+
+	/**
+	 * @param definitions
+	 *            the definitions to set
+	 */
+	public final void setDefinitions(Map<String, String> definitions) {
+		_definitions = definitions;
 	}
 
 	/**
@@ -46,6 +57,15 @@ public class LessContext {
 	 */
 	public boolean containsVariable(String variableName) {
 		return _variables.containsKey(variableName);
+	}
+
+	/**
+	 * 
+	 * @param selector
+	 * @return
+	 */
+	public boolean containsCssDefinition(String selector) {
+		return _definitions.containsKey(selector);
 	}
 
 }
