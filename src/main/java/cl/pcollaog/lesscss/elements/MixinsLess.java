@@ -1,11 +1,13 @@
 package cl.pcollaog.lesscss.elements;
 
+import static org.apache.commons.lang.StringUtils.replace;
+import static org.apache.commons.lang.StringUtils.substringBetween;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +51,8 @@ public class MixinsLess extends AbstractElementLess {
 			logger.debug("selector: [{}]", selector);
 			logger.debug("definition: [{}]", definition);
 
-			definition = StringUtils.replace(definition, "\n", " ");
-			definition = StringUtils.substringBetween(definition, "{", "}")
+			definition = replace(definition, "\n", " ");
+			definition = substringBetween(definition, "{", "}")
 					.trim();
 
 			definitions.put(selector, definition);
