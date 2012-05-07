@@ -2,6 +2,7 @@ package cl.pcollaog.lesscss;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,22 @@ public class LessContext {
 	 */
 	public boolean containsCssDefinition(String selector) {
 		return _definitions.containsKey(selector);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<String> getSelectors() {
+		return _definitions.keySet();
+	}
+
+	/**
+	 * @param selector
+	 * @return
+	 */
+	public String getCssDefinition(String selector) {
+		return _definitions.get(selector);
 	}
 
 }

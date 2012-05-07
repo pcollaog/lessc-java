@@ -47,7 +47,7 @@ public class LessCompiler {
 		LessContext lessContext = new LessContext();
 
 		AbstractElementLess less = new VariableLess(lessContext);
-		result = less.process(lessText);
+		result = less.process(result);
 
 		less = new MixinsLess(lessContext);
 

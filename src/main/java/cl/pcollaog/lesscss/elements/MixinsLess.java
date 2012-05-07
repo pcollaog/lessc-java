@@ -1,5 +1,6 @@
 package cl.pcollaog.lesscss.elements;
 
+import static org.apache.commons.lang.StringUtils.contains;
 import static org.apache.commons.lang.StringUtils.replace;
 import static org.apache.commons.lang.StringUtils.substringBetween;
 
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,17 +47,18 @@ public class MixinsLess extends AbstractElementLess {
 		Map<String, String> definitions = new LinkedHashMap<String, String>();
 
 		while (matcher.find()) {
-			String selector = matcher.group(1);
+			String selector = matcher.group(1).trim();
 			String definition = matcher.group(2);
 
 			logger.debug("selector: [{}]", selector);
 			logger.debug("definition: [{}]", definition);
 
 			definition = replace(definition, "\n", " ");
-			definition = substringBetween(definition, "{", "}")
-					.trim();
+			definition = substringBetween(definition, "{", "}").trim();
 
 			definitions.put(selector, definition);
+
+			lessText = StringUtils.remove(lessText, matcher.group(0));
 		}
 
 		getLessContext().setDefinitions(definitions);
@@ -65,6 +68,33 @@ public class MixinsLess extends AbstractElementLess {
 
 	@Override
 	protected String processInternal(String lessText) {
-		return lessText;
+		StringBuilder sbOut = new StringBuilder(lessText);
+
+		for (String selector : getLessContext().getSelectors()) {
+			String definition = getLessContext().getCssDefinition(selector);
+
+			StringBuilder sbCssDef = new StringBuilder(selector);
+			sbCssDef.append("{");
+
+			logger.debug("selector [{}]", selector);
+			logger.debug("Css definition [{}]", definition);
+
+			String[] defs = definition.split(";");
+
+			for (String def : defs) {
+				if (contains(def.trim(), ":")) {
+					sbCssDef.append(def.trim());
+					sbCssDef.append(";");
+				} else {
+
+				}
+			}
+			sbCssDef.append("}");
+			sbCssDef.append("\n");
+
+			sbOut.append(sbCssDef);
+		}
+
+		return sbOut.toString();
 	}
 }
