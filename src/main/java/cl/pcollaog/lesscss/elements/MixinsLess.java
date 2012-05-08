@@ -14,16 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cl.pcollaog.lesscss.LessContext;
+import cl.pcollaog.lesscss.css.CssDefinition;
 
 /**
  * <p>
  * </p>
- * <p>
- * $Id$
- * </p>
  * 
  * @author pcollaog
- * @version $Revision$
  */
 public class MixinsLess extends AbstractElementLess {
 
@@ -53,6 +50,9 @@ public class MixinsLess extends AbstractElementLess {
 		while (matcher.find()) {
 			String selector = matcher.group(1).trim();
 			String definition = matcher.group(2);
+
+			CssDefinition cssDefinition = new CssDefinition(selector,
+					definition);
 
 			logger.debug("selector: [{}]", selector);
 			logger.debug("definition: [{}]", definition);
