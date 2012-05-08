@@ -12,24 +12,26 @@ import org.slf4j.LoggerFactory;
 /**
  * <p>
  * </p>
+ * 
+ * @author pcollaog
  */
-public class VariableTest {
+public class MixinsLessTest {
 
-	private static Logger logger = LoggerFactory.getLogger(VariableTest.class);
+	private static Logger logger = LoggerFactory
+			.getLogger(MixinsLessTest.class);
 
 	@Test
-	public void testLessCss() throws IOException {
+	public void testEvaluateVariable() throws IOException {
 		String lessText = IOUtils.toString(getClass().getResourceAsStream(
-				"/test-variables.less"));
+				"/test-mixins.less"));
 
 		logger.info(lessText);
 
 		LessCompiler lessCompiler = new LessCompiler();
 		String out = lessCompiler.compile(lessText);
 
-		String expected = "#header { color: #6c94be; }\n";
+		String expected = "content: \"I am fnord.\";\n";
 
 		Assert.assertEquals(expected, out);
 	}
-
 }

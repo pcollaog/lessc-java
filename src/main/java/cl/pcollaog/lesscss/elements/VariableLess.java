@@ -1,5 +1,10 @@
 package cl.pcollaog.lesscss.elements;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.remove;
+import static org.apache.commons.lang.StringUtils.replace;
+import static org.apache.commons.lang.StringUtils.substringAfter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -40,13 +45,13 @@ public class VariableLess extends AbstractElementLess {
 	 * Busca las variables
 	 */
 	private static final Pattern VARIABLE_MATCHER = Pattern
-			.compile(".*(@[\\d\\w-_]*).*");
+			.compile(".*(@[\\w-]*).*");
 
 	private static final Pattern VARIABLE_NAME_VALUE_PATTERN = Pattern.compile(
-			"^(@[\\d\\w-_]*)\\s*:\\s*(.*);$", Pattern.MULTILINE);
+			"^(@[\\w-]*)\\s*:\\s*(.*);$", Pattern.MULTILINE);
 
 	private static final Pattern VARIABLE_REPLACE_PATTERN = Pattern
-			.compile("@[\\d\\w-_]+");
+			.compile("@[\\w-]+");
 
 	private static Pattern HEX_CSS_PATTER = Pattern
 			.compile("(#[\\da-fA-F]{6}|#[\\da-fA-F]{3})\\s*((\\+|\\-)?\\s*(#[\\da-fA-F]{6}|#[\\da-fA-F]{3}))?");
@@ -71,7 +76,7 @@ public class VariableLess extends AbstractElementLess {
 
 			lessVariables.put(name, value);
 
-			lessText = StringUtils.remove(lessText, raw).trim();
+			lessText = remove(lessText, raw).trim();
 
 			if (logger.isDebugEnabled()) {
 				logger.debug("Raw: [" + raw + "]");
@@ -91,14 +96,14 @@ public class VariableLess extends AbstractElementLess {
 
 		while (evaluateVariableMatcher.find()) {
 			String variable = evaluateVariableMatcher.group();
-			String variableName = StringUtils.substringAfter(variable, "@");
+			String variableName = substringAfter(variable, "@");
 
 			if (getLessContext().containsVariable(variableName)) {
 				String value = getLessContext().getVariable(variableName);
-				value = StringUtils.remove(value, "'").trim();
+				value = remove(value, "'").trim();
 				String result = getLessContext().getVariable("@".concat(value));
 
-				lessText = StringUtils.replace(lessText, variable, result);
+				lessText = replace(lessText, variable, result);
 
 				logger.debug("Variable to evaluate: [{}] value [{}]",
 						variableName, result);
@@ -111,7 +116,7 @@ public class VariableLess extends AbstractElementLess {
 			String variable = matcher.group();
 			String result = replaceVariable(variable);
 
-			lessText = StringUtils.replace(lessText, variable, result);
+			lessText = replace(lessText, variable, result);
 
 			logger.debug("Variable to replace: [{}] value [{}]", variable,
 					result);
@@ -134,8 +139,7 @@ public class VariableLess extends AbstractElementLess {
 			if (matcher.matches()) {
 				String toReplace = matcher.group(1);
 				String valueToReplace = replaceVariable(toReplace);
-				String replacedValue = StringUtils.replace(value, toReplace,
-						valueToReplace);
+				String replacedValue = replace(value, toReplace, valueToReplace);
 
 				replacedValue = operationsProcess(replacedValue);
 
@@ -162,8 +166,7 @@ public class VariableLess extends AbstractElementLess {
 			String operator = matcher.group(3);
 			String secondValue = matcher.group(4);
 
-			if (StringUtils.isEmpty(operator)
-					&& StringUtils.isEmpty(secondValue)) {
+			if (isEmpty(operator) && isEmpty(secondValue)) {
 				return firstValue;
 			} else {
 				// TODO: refatorize this
