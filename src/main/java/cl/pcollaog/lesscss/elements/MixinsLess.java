@@ -1,6 +1,7 @@
 package cl.pcollaog.lesscss.elements;
 
 import static org.apache.commons.lang.StringUtils.contains;
+import static org.apache.commons.lang.StringUtils.remove;
 import static org.apache.commons.lang.StringUtils.replace;
 import static org.apache.commons.lang.StringUtils.substringBetween;
 
@@ -9,7 +10,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public class MixinsLess extends AbstractElementLess {
 
 			definitions.put(selector, definition);
 
-			lessText = StringUtils.remove(lessText, matcher.group(0));
+			lessText = remove(lessText, matcher.group(0));
 		}
 
 		getLessContext().setDefinitions(definitions);
@@ -68,6 +68,12 @@ public class MixinsLess extends AbstractElementLess {
 
 	@Override
 	protected String processInternal(String lessText) {
+		for (String selector : getLessContext().getSelectors()) {
+			String cssDef = getLessContext().getCssDefinition(selector);
+			logger.debug("Workin on [{}]", selector);
+			logger.debug("CssDefinition [{}]", cssDef);
+		}
+
 		StringBuilder sbOut = new StringBuilder(lessText);
 
 		for (String selector : getLessContext().getSelectors()) {
