@@ -27,6 +27,10 @@ import cl.pcollaog.lesscss.LessContext;
  */
 public class MixinsLess extends AbstractElementLess {
 
+	private static final String COLON = ":";
+
+	private static final String SEMICOLON = ";";
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(MixinsLess.class);
 
@@ -85,14 +89,18 @@ public class MixinsLess extends AbstractElementLess {
 			logger.debug("selector [{}]", selector);
 			logger.debug("Css definition [{}]", definition);
 
-			String[] defs = definition.split(";");
+			String[] defs = definition.split(SEMICOLON);
 
 			for (String def : defs) {
-				if (contains(def.trim(), ":")) {
+				if (contains(def.trim(), COLON)) {
 					sbCssDef.append(def.trim());
-					sbCssDef.append(";");
+					sbCssDef.append(SEMICOLON);
 				} else {
-
+					if (getLessContext().containsCssDefinition(def.trim())) {
+						String replace = getLessContext().getCssDefinition(
+								def.trim());
+						sbCssDef.append(replace);
+					}
 				}
 			}
 			sbCssDef.append("}");
