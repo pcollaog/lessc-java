@@ -1,5 +1,6 @@
 package cl.pcollaog.lesscss.elements;
 
+import static org.apache.commons.lang.StringUtils.contains;
 import static org.apache.commons.lang.StringUtils.replace;
 import static org.apache.commons.lang.StringUtils.substringBetween;
 
@@ -55,6 +56,8 @@ public class MixinsLess extends AbstractElementLess {
 			definition = substringBetween(definition, "{", "}").trim();
 
 			definitions.put(selector, definition);
+
+			lessText = StringUtils.remove(lessText, matcher.group(0));
 		}
 
 		getLessContext().setDefinitions(definitions);
@@ -70,6 +73,33 @@ public class MixinsLess extends AbstractElementLess {
 			logger.debug("CssDefinition [{}]", cssDef);
 		}
 
-		return lessText;
+		StringBuilder sbOut = new StringBuilder(lessText);
+
+		for (String selector : getLessContext().getSelectors()) {
+			String definition = getLessContext().getCssDefinition(selector);
+
+			StringBuilder sbCssDef = new StringBuilder(selector);
+			sbCssDef.append("{");
+
+			logger.debug("selector [{}]", selector);
+			logger.debug("Css definition [{}]", definition);
+
+			String[] defs = definition.split(";");
+
+			for (String def : defs) {
+				if (contains(def.trim(), ":")) {
+					sbCssDef.append(def.trim());
+					sbCssDef.append(";");
+				} else {
+
+				}
+			}
+			sbCssDef.append("}");
+			sbCssDef.append("\n");
+
+			sbOut.append(sbCssDef);
+		}
+
+		return sbOut.toString();
 	}
 }

@@ -69,13 +69,17 @@ public class LessContext {
 		return _definitions.containsKey(selector);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<String> getSelectors() {
 		return _definitions.keySet();
 	}
 
 	/**
 	 * @param selector
-	 * @return 
+	 * @return
 	 */
 	public String getCssDefinition(String selector) {
 		return _definitions.get(selector);
