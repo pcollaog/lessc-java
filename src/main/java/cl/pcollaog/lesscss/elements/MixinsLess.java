@@ -54,13 +54,7 @@ public class MixinsLess extends AbstractElementLess {
 			CssDefinition cssDefinition = new CssDefinition(selector,
 					definition);
 
-			logger.debug("selector: [{}]", selector);
-			logger.debug("definition: [{}]", definition);
-
-			definition = replace(definition, "\n", " ");
-			definition = substringBetween(definition, "{", "}").trim();
-
-			definitions.put(selector, definition);
+			definitions.put(selector, cssDefinition.toString());
 
 			lessText = remove(lessText, matcher.group(0));
 		}
