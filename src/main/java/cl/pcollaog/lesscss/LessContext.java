@@ -7,6 +7,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cl.pcollaog.lesscss.css.CssDefinition;
+
 /**
  * <p>
  * </p>
@@ -24,7 +26,7 @@ public class LessContext {
 
 	private Map<String, String> _variables = new LinkedHashMap<String, String>();
 
-	private Map<String, String> _definitions = new LinkedHashMap<String, String>();
+	private Map<String, CssDefinition> _definitions = new LinkedHashMap<String, CssDefinition>();
 
 	/**
 	 * @param variables
@@ -39,7 +41,7 @@ public class LessContext {
 	 * @param definitions
 	 *            the definitions to set
 	 */
-	public final void setDefinitions(Map<String, String> definitions) {
+	public final void setDefinitions(Map<String, CssDefinition> definitions) {
 		_definitions = definitions;
 	}
 
@@ -81,7 +83,7 @@ public class LessContext {
 	 * @param selector
 	 * @return
 	 */
-	public String getCssDefinition(String selector) {
+	public CssDefinition getCssDefinition(String selector) {
 		return _definitions.get(selector);
 	}
 

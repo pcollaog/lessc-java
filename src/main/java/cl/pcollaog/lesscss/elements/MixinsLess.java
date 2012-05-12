@@ -1,9 +1,6 @@
 package cl.pcollaog.lesscss.elements;
 
-import static org.apache.commons.lang.StringUtils.contains;
 import static org.apache.commons.lang.StringUtils.remove;
-import static org.apache.commons.lang.StringUtils.replace;
-import static org.apache.commons.lang.StringUtils.substringBetween;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,16 +42,16 @@ public class MixinsLess extends AbstractElementLess {
 	protected String preProcess(String lessText) {
 		Matcher matcher = CSS_BLOCK_PATTERN.matcher(lessText);
 
-		Map<String, String> definitions = new LinkedHashMap<String, String>();
+		Map<String, CssDefinition> definitions = new LinkedHashMap<String, CssDefinition>();
 
 		while (matcher.find()) {
 			String selector = matcher.group(1).trim();
-			String definition = matcher.group(2);
+			String definition = matcher.group(2).trim();
 
 			CssDefinition cssDefinition = new CssDefinition(selector,
 					definition);
 
-			definitions.put(selector, cssDefinition.toString());
+			definitions.put(selector, cssDefinition);
 
 			lessText = remove(lessText, matcher.group(0));
 		}
@@ -66,43 +63,24 @@ public class MixinsLess extends AbstractElementLess {
 
 	@Override
 	protected String processInternal(String lessText) {
+		StringBuilder sb = new StringBuilder("");
 		for (String selector : getLessContext().getSelectors()) {
-			String cssDef = getLessContext().getCssDefinition(selector);
-			logger.debug("Workin on [{}]", selector);
-			logger.debug("CssDefinition [{}]", cssDef);
-		}
+			CssDefinition cssDef = getLessContext().getCssDefinition(selector);
 
-		StringBuilder sbOut = new StringBuilder(lessText);
+			if (!cssDef.getReferences().isEmpty()) {
+				for (String ref : cssDef.getReferences()) {
+					CssDefinition cssDefRef = getLessContext()
+							.getCssDefinition(ref);
+					cssDef.addCssDefinition(cssDefRef);
 
-		for (String selector : getLessContext().getSelectors()) {
-			String definition = getLessContext().getCssDefinition(selector);
-
-			StringBuilder sbCssDef = new StringBuilder(selector);
-			sbCssDef.append("{");
-
-			logger.debug("selector [{}]", selector);
-			logger.debug("Css definition [{}]", definition);
-
-			String[] defs = definition.split(SEMICOLON);
-
-			for (String def : defs) {
-				if (contains(def.trim(), COLON)) {
-					sbCssDef.append(def.trim());
-					sbCssDef.append(SEMICOLON);
-				} else {
-					if (getLessContext().containsCssDefinition(def.trim())) {
-						String replace = getLessContext().getCssDefinition(
-								def.trim());
-						sbCssDef.append(replace);
-					}
+					logger.debug("CssParsed {}", cssDef.toString());
 				}
 			}
-			sbCssDef.append("}");
-			sbCssDef.append("\n");
 
-			sbOut.append(sbCssDef);
+			sb.append(cssDef);
+			sb.append("\n");
 		}
 
-		return sbOut.toString();
+		return sb.toString();
 	}
 }
