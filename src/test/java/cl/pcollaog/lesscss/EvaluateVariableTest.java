@@ -20,14 +20,14 @@ import org.slf4j.LoggerFactory;
  * @author pcollaog
  * @version $Revision$
  */
-public class EvaluateVariableTest {
+public class EvaluateVariableTest extends BaseTest {
 
-	private static Logger logger = LoggerFactory.getLogger(EvaluateVariableTest.class);
+	private static Logger logger = LoggerFactory
+			.getLogger(EvaluateVariableTest.class);
 
 	@Test
 	public void testEvaluateVariable() throws IOException {
-		String lessText = IOUtils.toString(getClass().getResourceAsStream(
-				"/test-evaluate-variables.less"));
+		String lessText = loadLessCssFile("test-evaluate-variables.less");
 
 		logger.info(lessText);
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +12,13 @@ import org.slf4j.LoggerFactory;
  * <p>
  * </p>
  */
-public class VariableTest {
+public class VariableTest extends BaseTest {
 
 	private static Logger logger = LoggerFactory.getLogger(VariableTest.class);
 
 	@Test
 	public void testLessCss() throws IOException {
-		String lessText = IOUtils.toString(getClass().getResourceAsStream(
-				"/test-variables.less"));
+		String lessText = loadLessCssFile("test-variables.less");
 
 		logger.info(lessText);
 
