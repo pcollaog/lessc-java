@@ -63,24 +63,30 @@ public class MixinsLess extends AbstractElementLess {
 
 	@Override
 	protected String processInternal(String lessText) {
+		// TODO: reparar retorno (sale vacio)
 		StringBuilder sb = new StringBuilder("");
-		for (String selector : getLessContext().getSelectors()) {
-			CssDefinition cssDef = getLessContext().getCssDefinition(selector);
+		if (getLessContext().getSelectors().size() > 0) {
+			for (String selector : getLessContext().getSelectors()) {
+				CssDefinition cssDef = getLessContext().getCssDefinition(
+						selector);
 
-			if (!cssDef.getReferences().isEmpty()) {
-				for (String ref : cssDef.getReferences()) {
-					CssDefinition cssDefRef = getLessContext()
-							.getCssDefinition(ref);
-					cssDef.addCssDefinition(cssDefRef);
+				if (!cssDef.getReferences().isEmpty()) {
+					for (String ref : cssDef.getReferences()) {
+						CssDefinition cssDefRef = getLessContext()
+								.getCssDefinition(ref);
+						cssDef.addCssDefinition(cssDefRef);
 
-					logger.debug("CssParsed {}", cssDef.toString());
+						logger.debug("CssParsed {}", cssDef.toString());
+					}
 				}
-			}
 
-			sb.append(cssDef);
-			sb.append("\n");
+				sb.append(cssDef);
+				sb.append("\n");
+			}
+			return sb.toString();
+		} else {
+			return lessText;
 		}
 
-		return sb.toString();
 	}
 }
