@@ -14,18 +14,18 @@ import org.slf4j.LoggerFactory;
  */
 public class VariableTest extends BaseTest {
 
+	private static final String FILENAME_TEST = "test-variables";
+
 	private static Logger logger = LoggerFactory.getLogger(VariableTest.class);
 
 	@Test
 	public void testLessCss() throws IOException {
-		String lessText = loadLessCssFile("test-variables.less");
-
-		logger.info(lessText);
+		String lessText = loadLessCssFile(FILENAME_TEST);
 
 		LessCompiler lessCompiler = new LessCompiler();
 		String out = lessCompiler.compile(lessText);
 
-		String expected = "#header { color: #6c94be; }\n";
+		String expected = loadResultCssFile(FILENAME_TEST);
 
 		Assert.assertEquals(expected, out);
 	}

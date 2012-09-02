@@ -5,8 +5,6 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -16,17 +14,16 @@ import org.slf4j.LoggerFactory;
  */
 public class MixinsLessTest extends BaseTest {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(MixinsLessTest.class);
+	private static final String FILENAME_TEST = "test-mixins";
 
 	@Test
 	public void testEvaluateVariable() throws IOException {
-		String lessText = loadLessCssFile("test-mixins.less");
+		String lessText = loadLessCssFile(FILENAME_TEST);
 
 		LessCompiler lessCompiler = new LessCompiler();
 		String out = lessCompiler.compile(lessText);
 
-		String expected = "content: \"I am fnord.\";\n";
+		String expected = loadResultCssFile(FILENAME_TEST);
 
 		Assert.assertEquals(expected, out);
 	}

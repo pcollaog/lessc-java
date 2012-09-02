@@ -1,17 +1,12 @@
-/**
-* Comentario
-*/
-.bordered {
-  border-top: dotted 1px black;
-  border-bottom: solid 2px black;
+.rounded-corners (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
 }
 
-#menu a {
-  color: #111;
-  .bordered;
+#header {
+  .rounded-corners;
 }
-
-.post a {
-  color: red;
-  .bordered;
+#footer {
+  .rounded-corners(10px);
 }

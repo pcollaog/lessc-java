@@ -15,7 +15,14 @@ public abstract class BaseTest {
 	private static Logger logger = LoggerFactory.getLogger(BaseTest.class);
 
 	protected String loadLessCssFile(final String filename) throws IOException {
-		String filePath = "/lesscss/".concat(filename);
+		String filePath = "/lesscss/".concat(filename).concat(".less");
+		logger.debug("Reading file [{}]", filePath);
+		return IOUtils.toString(getClass().getResourceAsStream(filePath));
+	}
+
+	protected String loadResultCssFile(final String filename)
+			throws IOException {
+		String filePath = "/lesscss/compiled/".concat(filename).concat(".css");
 		logger.debug("Reading file [{}]", filePath);
 		return IOUtils.toString(getClass().getResourceAsStream(filePath));
 	}
