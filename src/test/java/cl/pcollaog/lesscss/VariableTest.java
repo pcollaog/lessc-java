@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,21 +12,20 @@ import org.slf4j.LoggerFactory;
  * <p>
  * </p>
  */
-public class VariableTest {
+public class VariableTest extends BaseTest {
+
+	private static final String FILENAME_TEST = "test-variables";
 
 	private static Logger logger = LoggerFactory.getLogger(VariableTest.class);
 
 	@Test
 	public void testLessCss() throws IOException {
-		String lessText = IOUtils.toString(getClass().getResourceAsStream(
-				"/test-variables.less"));
-
-		logger.info(lessText);
+		String lessText = loadLessCssFile(FILENAME_TEST);
 
 		LessCompiler lessCompiler = new LessCompiler();
 		String out = lessCompiler.compile(lessText);
 
-		String expected = "#header { color: #6c94be; }\n";
+		String expected = loadResultCssFile(FILENAME_TEST);
 
 		Assert.assertEquals(expected, out);
 	}
